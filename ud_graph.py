@@ -1,7 +1,7 @@
-# Course: 
-# Author: 
-# Assignment: 
-# Description:
+# Course: CS261 Data Structures
+# Author: Jonathan Nichols
+# Assignment: 6
+# Description: Implementation of undirected
 
 
 class UndirectedGraph:
@@ -44,70 +44,94 @@ class UndirectedGraph:
         """
         Add new vertex to the graph
         """
-        
+        # add to the dict if the key does not exist
+        if v not in self.adj_list:
+            self.adj_list[v] = []
+
     def add_edge(self, u: str, v: str) -> None:
         """
         Add edge to the graph
         """
-        
+        # same vertex
+        if u == v:
+            return
+        # edge already exists
+        if u in self.adj_list and v in self.adj_list:
+            if u in self.adj_list[v] and v in self.adj_list[u]:
+                return
+        # make the vertices exist in the graph
+        self.add_vertex(u)
+        self.add_vertex(v)
+        # add the edge
+        self.adj_list[u].append(v)
+        self.adj_list[v].append(u)
 
     def remove_edge(self, v: str, u: str) -> None:
         """
         Remove edge from the graph
         """
-        
+        # same vertex
+        if u == v:
+            return
+        # at least one vertex does not exist
+        if u not in self.adj_list or v not in self.adj_list:
+            return
+        # edge does not exist
+        if u not in self.adj_list[v] or v not in self.adj_list[u]:
+            return
+        # remove the edge
+        self.adj_list[u].remove(v)
+        self.adj_list[v].remove(u)
 
     def remove_vertex(self, v: str) -> None:
         """
         Remove vertex and all connected edges
         """
-        
+        # vertex does not exist
+        if v not in self.adj_list:
+            return
+        # remove edges from connected vertices
+        for vertex in self.adj_list[v]:
+            self.adj_list[vertex].remove(v)
+        # remove the vertex
+        self.adj_list.pop(v)
 
-    def get_vertices(self) -> []:
+    def get_vertices(self):
         """
         Return list of vertices in the graph (any order)
         """
-       
 
-    def get_edges(self) -> []:
+    def get_edges(self):
         """
         Return list of edges in the graph (any order)
         """
-        
 
-    def is_valid_path(self, path: []) -> bool:
+    def is_valid_path(self, path) -> bool:
         """
         Return true if provided path is valid, False otherwise
         """
-       
 
-    def dfs(self, v_start, v_end=None) -> []:
+    def dfs(self, v_start, v_end=None):
         """
         Return list of vertices visited during DFS search
         Vertices are picked in alphabetical order
         """
-       
 
-    def bfs(self, v_start, v_end=None) -> []:
+    def bfs(self, v_start, v_end=None):
         """
         Return list of vertices visited during BFS search
         Vertices are picked in alphabetical order
         """
-        
 
     def count_connected_components(self):
         """
         Return number of connected componets in the graph
         """
-      
 
     def has_cycle(self):
         """
         Return True if graph contains a cycle, False otherwise
         """
-       
-
-   
 
 
 if __name__ == '__main__':
@@ -128,7 +152,6 @@ if __name__ == '__main__':
         g.add_edge(u, v)
     print(g)
 
-
     print("\nPDF - method remove_edge() / remove_vertex example 1")
     print("----------------------------------------------------")
     g = UndirectedGraph(['AB', 'AC', 'BC', 'BD', 'CD', 'CE', 'DE'])
@@ -139,7 +162,6 @@ if __name__ == '__main__':
     g.remove_vertex('D')
     print(g)
 
-
     print("\nPDF - method get_vertices() / get_edges() example 1")
     print("---------------------------------------------------")
     g = UndirectedGraph()
@@ -147,14 +169,12 @@ if __name__ == '__main__':
     g = UndirectedGraph(['AB', 'AC', 'BC', 'BD', 'CD', 'CE'])
     print(g.get_edges(), g.get_vertices(), sep='\n')
 
-
     print("\nPDF - method is_valid_path() example 1")
     print("--------------------------------------")
     g = UndirectedGraph(['AB', 'AC', 'BC', 'BD', 'CD', 'CE', 'DE'])
     test_cases = ['ABC', 'ADE', 'ECABDCBE', 'ACDECB', '', 'D', 'Z']
     for path in test_cases:
         print(list(path), g.is_valid_path(list(path)))
-
 
     print("\nPDF - method dfs() and bfs() example 1")
     print("--------------------------------------")
@@ -167,7 +187,6 @@ if __name__ == '__main__':
     for i in range(1, len(test_cases)):
         v1, v2 = test_cases[i], test_cases[-1 - i]
         print(f'{v1}-{v2} DFS:{g.dfs(v1, v2)} BFS:{g.bfs(v1, v2)}')
-
 
     print("\nPDF - method count_connected_components() example 1")
     print("---------------------------------------------------")
@@ -184,7 +203,6 @@ if __name__ == '__main__':
         g.add_edge(u, v) if command == 'add' else g.remove_edge(u, v)
         print(g.count_connected_components(), end=' ')
     print()
-
 
     print("\nPDF - method has_cycle() example 1")
     print("----------------------------------")
