@@ -180,28 +180,25 @@ class DirectedGraph:
         """
         Returns true if there is at least one cycle in the graph
         """
-        # storing two visited lists to help process disconnected graphs
-        outer_visited = []
         for v_start in range(self.v_count):
-            if v_start not in outer_visited:
-                # perform dfs
-                inner_visited = []
-                v_stack = [v_start]
-                while v_stack:
-                    vertex = v_stack.pop()
-                    # process the vertex
-                    if vertex not in inner_visited:
-                        inner_visited.append(vertex)
-                    # find the child nodes
-                    for i in range(self.v_count):
-                        # check for edge
-                        if self.adj_matrix[vertex][i]:
-                            # current vertex points back to start
-                            if v_start == i:
-                                return True
-                            # add adjacent nodes to the queue
-                            if i not in inner_visited:
-                                v_stack.append(i)
+            # perform dfs
+            visited = []
+            v_stack = [v_start]
+            while v_stack:
+                vertex = v_stack.pop()
+                # process the vertex
+                if vertex not in visited:
+                    visited.append(vertex)
+                # find the child nodes
+                for i in range(self.v_count):
+                    # check for edge
+                    if self.adj_matrix[vertex][i]:
+                        # current vertex points back to start
+                        if v_start == i:
+                            return True
+                        # add adjacent nodes to the queue
+                        if i not in visited:
+                            v_stack.append(i)
         return False
 
     def dijkstra(self, src: int):
