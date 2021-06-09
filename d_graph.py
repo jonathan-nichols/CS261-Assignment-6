@@ -69,8 +69,8 @@ class DirectedGraph:
         Adds a new edge to the graph
         """
         # guard clauses
-        if (self.is_out_of_bounds(src) or
-            self.is_out_of_bounds(dst) or
+        if (self._is_out_of_bounds(src) or
+            self._is_out_of_bounds(dst) or
             src == dst or
                 weight < 1):
             return
@@ -81,7 +81,7 @@ class DirectedGraph:
         """
         Remove the edge from the graph
         """
-        if self.is_out_of_bounds(src) or self.is_out_of_bounds(dst):
+        if self._is_out_of_bounds(src) or self._is_out_of_bounds(dst):
             return
         self.adj_matrix[src][dst] = 0
 
@@ -114,7 +114,7 @@ class DirectedGraph:
             return True
         # check if path vertices are in bounds
         for vertex in path:
-            if self.is_out_of_bounds(vertex):
+            if self._is_out_of_bounds(vertex):
                 return False
         # iterate over path and check for missing edges
         for i in range(len(path) - 1):
@@ -125,15 +125,56 @@ class DirectedGraph:
 
     def dfs(self, v_start, v_end=None):
         """
-        TODO: Write this implementation
+        Performs depth-first search in the graph 
+        Returns an ordered list of vertices visited
         """
-        pass
+        # check if v_start exists
+        if self._is_out_of_bounds(v_start):
+            return []
+        # perform the dfs
+        visited = []
+        v_stack = [v_start]
+        while v_stack:
+            vertex = v_stack.pop()
+            # process the vertex
+            if vertex not in visited:
+                visited.append(vertex)
+            if vertex == v_end:
+                break
+            # iterate backwards to sort the adjacent nodes in the stack
+            for i in range(self.v_count - 1, -1, -1):
+                # check for edge
+                if self.adj_matrix[vertex][i]:
+                    # add adjacent nodes to the stack
+                    if i not in visited:
+                        v_stack.append(i)
+        return visited
 
     def bfs(self, v_start, v_end=None):
         """
-        TODO: Write this implementation
+        Performs a breadth-first search in the graph
+        Returns an ordered list of vertices visited
         """
-        pass
+        # check if v_start exists
+        if self._is_out_of_bounds(v_start):
+            return []
+        # perform the dfs
+        visited = []
+        v_queue = [v_start]
+        while v_queue:
+            vertex = v_queue.pop()
+            # process the vertex
+            if vertex not in visited:
+                visited.append(vertex)
+            if vertex == v_end:
+                break
+            for i in range(self.v_count):
+                # check for edge
+                if self.adj_matrix[vertex][i]:
+                    # add adjacent nodes to the queue
+                    if i not in visited:
+                        v_queue.insert(0, i)
+        return visited
 
     def has_cycle(self):
         """
@@ -147,7 +188,7 @@ class DirectedGraph:
         """
         pass
 
-    def is_out_of_bounds(self, index: int) -> bool:
+    def _is_out_of_bounds(self, index: int) -> bool:
         """Helper function to check if given vertex exists"""
         return index < 0 or index > self.v_count - 1
 
@@ -186,13 +227,13 @@ if __name__ == '__main__':
     for path in test_cases:
         print(path, g.is_valid_path(path))
 
-    # print("\nPDF - method dfs() and bfs() example 1")
-    # print("--------------------------------------")
-    # edges = [(0, 1, 10), (4, 0, 12), (1, 4, 15), (4, 3, 3),
-    #          (3, 1, 5), (2, 1, 23), (3, 2, 7)]
-    # g = DirectedGraph(edges)
-    # for start in range(5):
-    #     print(f'{start} DFS:{g.dfs(start)} BFS:{g.bfs(start)}')
+    print("\nPDF - method dfs() and bfs() example 1")
+    print("--------------------------------------")
+    edges = [(0, 1, 10), (4, 0, 12), (1, 4, 15), (4, 3, 3),
+             (3, 1, 5), (2, 1, 23), (3, 2, 7)]
+    g = DirectedGraph(edges)
+    for start in range(5):
+        print(f'{start} DFS:{g.dfs(start)} BFS:{g.bfs(start)}')
 
     # print("\nPDF - method has_cycle() example 1")
     # print("----------------------------------")
