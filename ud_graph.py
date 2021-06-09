@@ -1,7 +1,7 @@
 # Course: CS261 Data Structures
 # Author: Jonathan Nichols
 # Assignment: 6
-# Description: Implementation of undirected
+# Description: Implementation of undirected graph
 
 
 class UndirectedGraph:
