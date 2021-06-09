@@ -138,12 +138,58 @@ class UndirectedGraph:
         Return list of vertices visited during DFS search
         Vertices are picked in alphabetical order
         """
+        # check if start vertex exists
+        if v_start not in self.adj_list:
+            return []
+        # initialize data containers
+        # simulating a stack by only using append and pop list methods
+        visited = []
+        v_stack = []
+        v_stack.append(v_start)
+        # process the vertices
+        while v_stack:
+            vertex = v_stack.pop()
+            # store the visited vertex
+            if vertex not in visited:
+                visited.append(vertex)
+            # check for end vertex
+            if vertex == v_end:
+                break
+            # store the successor vertices
+            direct_successors = sorted(self.adj_list[vertex], reverse=True)
+            for v in direct_successors:
+                if v not in visited:
+                    v_stack.append(v)
+        return visited
 
     def bfs(self, v_start, v_end=None):
         """
         Return list of vertices visited during BFS search
         Vertices are picked in alphabetical order
         """
+        # check if start vertex exists
+        if v_start not in self.adj_list:
+            return []
+        # initialize data containers
+        # simulating a queue with a list
+        visited = []
+        v_queue = []
+        v_queue.append(v_start)
+        # process the vertices
+        while v_queue:
+            vertex = v_queue.pop()
+            # store the visited vertex
+            if vertex not in visited:
+                visited.append(vertex)
+            # check for end vertex
+            if vertex == v_end:
+                break
+            # store the successor vertices
+            direct_successors = sorted(self.adj_list[vertex])
+            for v in direct_successors:
+                if v not in visited:
+                    v_queue[:0] = v
+        return visited
 
     def count_connected_components(self):
         """
@@ -198,17 +244,17 @@ if __name__ == '__main__':
     for path in test_cases:
         print(list(path), g.is_valid_path(list(path)))
 
-    # print("\nPDF - method dfs() and bfs() example 1")
-    # print("--------------------------------------")
-    # edges = ['AE', 'AC', 'BE', 'CE', 'CD', 'CB', 'BD', 'ED', 'BH', 'QG', 'FG']
-    # g = UndirectedGraph(edges)
-    # test_cases = 'ABCDEGH'
-    # for case in test_cases:
-    #     print(f'{case} DFS:{g.dfs(case)} BFS:{g.bfs(case)}')
-    # print('-----')
-    # for i in range(1, len(test_cases)):
-    #     v1, v2 = test_cases[i], test_cases[-1 - i]
-    #     print(f'{v1}-{v2} DFS:{g.dfs(v1, v2)} BFS:{g.bfs(v1, v2)}')
+    print("\nPDF - method dfs() and bfs() example 1")
+    print("--------------------------------------")
+    edges = ['AE', 'AC', 'BE', 'CE', 'CD', 'CB', 'BD', 'ED', 'BH', 'QG', 'FG']
+    g = UndirectedGraph(edges)
+    test_cases = 'ABCDEGH'
+    for case in test_cases:
+        print(f'{case} DFS:{g.dfs(case)} BFS:{g.bfs(case)}')
+    print('-----')
+    for i in range(1, len(test_cases)):
+        v1, v2 = test_cases[i], test_cases[-1 - i]
+        print(f'{v1}-{v2} DFS:{g.dfs(v1, v2)} BFS:{g.bfs(v1, v2)}')
 
     # print("\nPDF - method count_connected_components() example 1")
     # print("---------------------------------------------------")
