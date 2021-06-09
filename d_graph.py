@@ -3,6 +3,10 @@
 # Assignment: 6
 # Description: Implementation of a directed graph
 
+from typing import Dict
+import heapq
+
+
 class DirectedGraph:
     """
     Class to implement directed weighted graph
@@ -203,9 +207,26 @@ class DirectedGraph:
 
     def dijkstra(self, src: int):
         """
-        TODO: Write this implementation
+        Implements the Dijkstra algorithm to compute length of the 
+        shortest path from a given vertex to all other vertices in the graph
         """
-        pass
+        distances = dict()
+        queue = [(0, src)]
+        # perform djikstra algorithm using heapq
+        while queue:
+            distance, vertex = heapq.heappop(queue)
+            if vertex not in distances:
+                distances[vertex] = distance
+                for i in range(self.v_count):
+                    weight = self.adj_matrix[vertex][i]
+                    if weight:
+                        heapq.heappush(queue, (distance + weight, i))
+        # fill in missing data
+        for v in range(self.v_count):
+            if v not in distances:
+                distances[v] = float('inf')
+        # convert and return as list
+        return [val for key, val in sorted(distances.items())]
 
     def _is_out_of_bounds(self, index: int) -> bool:
         """Helper function to check if given vertex exists"""
@@ -271,14 +292,14 @@ if __name__ == '__main__':
         print(g.get_edges(), g.has_cycle(), sep='\n')
     print('\n', g)
 
-    # print("\nPDF - dijkstra() example 1")
-    # print("--------------------------")
-    # edges = [(0, 1, 10), (4, 0, 12), (1, 4, 15), (4, 3, 3),
-    #          (3, 1, 5), (2, 1, 23), (3, 2, 7)]
-    # g = DirectedGraph(edges)
-    # for i in range(5):
-    #     print(f'DIJKSTRA {i} {g.dijkstra(i)}')
-    # g.remove_edge(4, 3)
-    # print('\n', g)
-    # for i in range(5):
-    #     print(f'DIJKSTRA {i} {g.dijkstra(i)}')
+    print("\nPDF - dijkstra() example 1")
+    print("--------------------------")
+    edges = [(0, 1, 10), (4, 0, 12), (1, 4, 15), (4, 3, 3),
+             (3, 1, 5), (2, 1, 23), (3, 2, 7)]
+    g = DirectedGraph(edges)
+    for i in range(5):
+        print(f'DIJKSTRA {i} {g.dijkstra(i)}')
+    g.remove_edge(4, 3)
+    print('\n', g)
+    for i in range(5):
+        print(f'DIJKSTRA {i} {g.dijkstra(i)}')
