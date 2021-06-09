@@ -108,11 +108,11 @@ class UndirectedGraph:
         """
         edges = []
         # iterate through all edges
-        for vertex in self.adj_list:
-            for edge in self.adj_list[vertex]:
+        for vertex_a in self.adj_list:
+            for vertex_b in self.adj_list[vertex_a]:
                 # require alphabetical order to avoid duplicates
-                if edge > vertex:
-                    edges.append((vertex, edge))
+                if vertex_b > vertex_a:
+                    edges.append((vertex_a, vertex_b))
         return edges
 
     def is_valid_path(self, path) -> bool:
